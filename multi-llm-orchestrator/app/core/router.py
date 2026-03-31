@@ -1,11 +1,15 @@
-class InputAnalyzer:
-    def analyze(self, user_input: str) -> dict:
-        lowered = user_input.lower()
+class Router:
+    def select_model(self, analysis: dict, max_budget: float) -> dict:
+        task = analysis["task"]
+        complexity = analysis["complexity"]
 
-        if "code" in lowered or "debug" in lowered:
-            return {"task": "coding", "complexity": "medium"}
+        if task == "coding":
+            return {"provider": "openai", "model": "gpt-4o"}
 
-        if len(user_input) > 1000:
-            return {"task": "long_doc", "complexity": "high"}
+        if task == "long_doc":
+            return {"provider": "openai", "model": "gpt-4o"}
 
-        return {"task": "general", "complexity": "low"}
+        if complexity == "low" and max_budget <= 0.05:
+            return {"provider": "openai", "model": "gpt-4o-mini"}
+
+        return {"provider": "openai", "model": "gpt-4o-mini"}
